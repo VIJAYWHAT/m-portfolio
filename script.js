@@ -67,26 +67,6 @@ document.querySelectorAll(".fade-in").forEach((el) => {
   observer.observe(el);
 });
 
-// Form submission
-const contactForm = document.getElementById("contact-form");
-contactForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const formData = {
-    name: document.getElementById("name").value,
-    email: document.getElementById("email").value,
-    subject: document.getElementById("subject").value,
-    message: document.getElementById("message").value,
-  };
-
-  // Here you would typically send the data to a server
-  console.log("Form submitted:", formData);
-
-  // Show success message
-  alert("Thank you for your message! I will get back to you soon.");
-  contactForm.reset();
-});
-
 // Add active class to current nav link
 const sections = document.querySelectorAll("section[id]");
 
@@ -166,4 +146,55 @@ hero.addEventListener("mousemove", (e) => {
   const x = e.clientX / window.innerWidth;
   const y = e.clientY / window.innerHeight;
   hero.style.backgroundPosition = `${x * 50}% ${y * 50}%`;
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("contact-form");
+  const submitBtn = document.querySelector(".submit-btn");
+
+  // Create a response element dynamically
+  const responseEl = document.createElement("div");
+  responseEl.id = "response";
+  responseEl.style.marginTop = "15px";
+  form.appendChild(responseEl);
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    // Loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading"></span> Sending...';
+    responseEl.textContent = "";
+    responseEl.className = "";
+
+    // Form data
+    const formData = new FormData(form);
+    const data = new URLSearchParams(formData);
+
+    try {
+      const response = await fetch(
+        "https://script.google.com/macros/s/AKfycbwoutWeDtVyecWqFHLXhJtgss3lOTC1DNDKy8Kdfirv9ARtfIXM8_MAgclP22PqmDH2/exec", // <-- Replace this
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+
+      const result = await response.text();
+
+      // Success message
+      responseEl.className = "response success";
+      responseEl.textContent = result;
+      form.reset();
+    } catch (error) {
+      // Error message
+      responseEl.className = "response error";
+      responseEl.textContent = "Something went wrong. Please try again later!";
+      console.error("Error:", error);
+    } finally {
+      // Reset button
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+    }
+  });
 });
