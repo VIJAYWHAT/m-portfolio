@@ -364,6 +364,18 @@ section {
   background: var(--gradient-1);
 }
 
+.ui-path-exp {
+  width: 78.3vw;
+  /* Default for desktop/laptop */
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  .ui-path-exp {
+    width: 100% !important;
+  }
+}
+
 .experience-card:hover {
   transform: translateY(-8px);
   box-shadow: var(--shadow-lg);
@@ -597,6 +609,7 @@ footer p {
     opacity: 0;
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
